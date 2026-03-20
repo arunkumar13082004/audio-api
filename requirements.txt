@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+torch
+torchaudio
+faster-whisper
+pyannote.audio
+huggingface_hub
+ffmpeg-python
