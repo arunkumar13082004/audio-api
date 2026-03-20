@@ -57,10 +57,28 @@ def prepare_audio(url):
 @app.get("/process")
 def process(url: str):
 
+    # Load models INSIDE request (important for Render)
+    pipeline = Pipeline.from_pretrained(
+        "pyannote/speaker-diarization-3.1",
+        token=HF_TOKEN
+    )
+
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    pipeline.to(torch.device(device))
+
+    asr_model = WhisperModel(
+        "small",
+        device=device,
+        compute_type="float16" if device == "cuda" else "int8"
+    )
+
+    # Convert video → audio
     audio_path = prepare_audio(url)
 
+    # Run diarization
     diarization = pipeline(audio_path)
 
+    # Run ASR
     segments_asr, _ = asr_model.transcribe(audio_path)
     asr_segments = list(segments_asr)
 
@@ -85,7 +103,6 @@ def process(url: str):
             "text": text
         })
 
-    # Convert to DynamoDB JSON
     output = []
 
     for r in results:
