@@ -6,3 +6,4 @@ faster-whisper
 pyannote.audio
 huggingface_hub
 ffmpeg-python
+imageio-ffmpeg

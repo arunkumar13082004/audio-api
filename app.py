@@ -7,6 +7,11 @@ from pyannote.audio import Pipeline
 from faster_whisper import WhisperModel
 from huggingface_hub import login
 
+import imageio_ffmpeg as ffmpeg_tool
+import os
+
+os.environ["IMAGEIO_FFMPEG_EXE"] = ffmpeg_tool.get_ffmpeg_exe()
+
 app = FastAPI()
 
 HF_TOKEN = os.getenv("HUGGINGFACE_TOKEN")
